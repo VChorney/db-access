@@ -1,9 +1,13 @@
 package com.db_access.entity;
 
+import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
+import lombok.experimental.FieldDefaults;
 import org.hibernate.validator.constraints.Length;
 
+import javax.persistence.*;
 import javax.validation.constraints.Future;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Pattern;
@@ -13,26 +17,36 @@ import java.util.Objects;
 
 @Getter
 @Setter
+@ToString
+@FieldDefaults(level = AccessLevel.PRIVATE)
+@Entity
+@Table(name = "letter")
 public class Letter {
 
-    private Long id;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    Long id;
 
     @Pattern(regexp = "^[A-Z0-9._%+-]+@[A-Z0-9.-]+\\.[A-Z]{2,6}$")
     @NotBlank
-    private String recipient;
+    @Column
+    String recipient;
 
     @NotBlank
     @Length(min = 3, max = 128)
-    private String subject;
+    @Column
+    String subject;
 
     @NotBlank
     @Length(min = 3, max = 128)
-    private String body;
+    @Column
+    String body;
 
 
     @Future
     @NotBlank
-    private LocalDateTime deliveryTime;
+    @Column
+    LocalDateTime deliveryTime;
 
     @Override
     public boolean equals(Object o) {
@@ -51,14 +65,4 @@ public class Letter {
         return Objects.hash(getId(), getRecipient(), getSubject(), getBody(), getDeliveryTime());
     }
 
-    @Override
-    public String toString() {
-        return "Letter{" +
-                "id=" + id +
-                ", recipient='" + recipient + '\'' +
-                ", subject='" + subject + '\'' +
-                ", body='" + body + '\'' +
-                ", deliveryTime=" + deliveryTime +
-                '}';
-    }
 }
